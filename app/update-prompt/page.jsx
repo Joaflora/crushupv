@@ -1,20 +1,32 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 import Form from '@components/Form';
 
-const CreateNote = () => {
+const EditNote = () => {
   const router = useRouter();
   const { data: session } = useSession();
+  const searchParams = useSearchParams();
+  const noteId = searchParams.get('id');
+
 
   const [submitting, setSubmitting] = useState(false);
   const [post, setPost] = useState({
     note: '',
     tag: '',
   });
+
+  useEffect(() => {
+    first
+  
+    return () => {
+      second
+    }
+  }, [promptId])
+  
 
   const createNote = async (e) => {
     e.preventDefault(); // will prevent default behavior of the browser which is to reload
@@ -41,7 +53,7 @@ const CreateNote = () => {
 
   return (
     <Form
-      type="Create"
+      type="Edit"
       post={post}
       setPost={setPost}
       submitting={submitting}
@@ -50,4 +62,4 @@ const CreateNote = () => {
   )
 }
 
-export default CreateNote
+export default EditNote
