@@ -29,7 +29,7 @@ const CreateNote = () => {
           tag: post.tag,
         })
       });
-      if (Response.ok) {
+      if (res.ok) {
         router.push('/');
       }
     } catch (error) {
