@@ -21,7 +21,7 @@ export const PATCH = async (request, { params }) => {
     await connectToDB();
     const existingNote = await Note.findById(params.id);
 
-    if(!existingNote) { return new Response("Note not found", { status: 404 }); }
+    if(!existingNote) { return new Response("Note not found", { status: 404 });}
     existingNote.note = note;
     existingNote.tag = tag;
 
@@ -38,7 +38,8 @@ export const DELETE = async (request, { params }) => {
       await connectToDB();
 
       // Find the prompt by ID and remove it
-      await Note.findByIdAndRemove(params.id);
+      const res = await Note.findByIdAndDelete(params.id);
+      console.log('q coj passa:', res)
 
       return new Response("Note deleted successfully", { status: 200 });
   } catch (error) {

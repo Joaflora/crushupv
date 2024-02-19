@@ -7,8 +7,8 @@ import { useRouter } from 'next/navigation';
 import Profile from '@components/Profile';
 
 const MyProfile = () => {
-  const { data: session } = useSession();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [posts, setPosts] = useState([]);
 
@@ -31,10 +31,11 @@ const MyProfile = () => {
 
     if (hasConfirmed) {
       try {
-        await fetch(`/api/note/${post._id.toString()}`, {
+        const res = await fetch(`/api/note/${post._id.toString()}`, {
           method: "DELETE",
         });
 
+        console.log(res);
         const filteredPosts = posts.filter((p) => p._id !== post._id);
         setPosts(filteredPosts);
       } catch (error) {
