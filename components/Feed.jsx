@@ -19,23 +19,44 @@ const NoteCardList = ({ data, handleTagClick }) => {
 };
 
 const Feed = () => {
-  const [searchText, setSearchText] = useState('');
   const [posts, setPosts] = useState([]);
 
-  const handleSearchChange = (e) => {
+  // Search states
+  const [searchText, setSearchText] = useState('');
+  const [searchTimeout, setSearchTimeout] = useState(null);
+  const [searchedResults, setSearchedResults] = useState([]);
 
-  }
+  const fetchPosts = async () => {
+    const response = await fetch('/api/note');
+    const data = await response.json();
+
+    setPosts(data);
+  };
 
   useEffect(() => {
-    const fetchPosts = async () => {
-      const response = await fetch('/api/note');
-      const data = await response.json();
-
-      setPosts(data);
-    }
     fetchPosts();
-  }, [])
-  
+  }, []);
+
+  const filterNotes = (searchText) => {
+    const regex = new RegExp(searchText, "i");
+    return posts.filter((post) =>
+      regex.test(post.creator.username) ||
+      regex.test(post.note) ||
+      regex.test(post.tag)
+    );
+  };
+
+  const handleSearchChange = (e) => {
+    clearTimeout(searchTimeout);
+    setSearchText(e.target.value);
+
+    setSearchTimeout(
+      setTimeout(() => {
+        const searchResult = filterNotes(e.target.value);
+        setSearchedResults(searchResult);
+      }, 500)
+    );
+  };
 
   return (
     <section className='feed'>
@@ -49,11 +70,17 @@ const Feed = () => {
           className='search_input peer'
         />
       </form>
-
-      <NoteCardList
+      {searchText ? (
+        <NoteCardList
+        data={searchedResults}
+        handleTagClick={() => {}}
+        />) :
+        <NoteCardList
         data={posts}
         handleTagClick={() => {}}
-      />
+        />
+      }
+      
     </section>
   )
 }
