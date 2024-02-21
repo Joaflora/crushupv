@@ -58,6 +58,12 @@ const Feed = () => {
     );
   };
 
+  const handleTagClick = (tagName) => {
+    setSearchText(tagName);
+    const searchResult = filterNotes(tagName);
+    setSearchedResults(searchResult);
+  }
+
   return (
     <section className='feed'>
       <form className="relative w-full flex-center">
@@ -72,13 +78,16 @@ const Feed = () => {
       </form>
       {searchText ? (
         <NoteCardList
-        data={searchedResults}
-        handleTagClick={() => {}}
-        />) :
-        <NoteCardList
-        data={posts}
-        handleTagClick={() => {}}
+          data={searchedResults}
+          handleTagClick={handleTagClick}
         />
+      ) : (
+        <NoteCardList
+          data={posts}
+          handleTagClick={handleTagClick}
+        />
+      )
+        
       }
       
     </section>
