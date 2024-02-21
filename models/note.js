@@ -12,6 +12,10 @@ const NoteSchema = new Schema({
   tag: {
     type: String,
     required: [true, 'Tag is required!'],
+  },
+  comment: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Comment'
   }
 });
 

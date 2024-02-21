@@ -3,8 +3,9 @@
 import { useEffect, useState } from 'react';
 
 import NoteCard from './NoteCard';
+import NoteCardDialog from './NoteCardDialog';
 
-const NoteCardList = ({ data, handleTagClick }) => {
+const NoteCardList = ({ data, handleTagClick, handleClickOpen }) => {
   return (
     <div className="mt-16 prompt_layout">
       {data.map((post) => (
@@ -12,6 +13,7 @@ const NoteCardList = ({ data, handleTagClick }) => {
           key={post._id}
           post={post}
           handleTagClick={handleTagClick}
+          handleClickOpen={handleClickOpen}
         ></NoteCard>
       ))}
     </div>
@@ -20,6 +22,10 @@ const NoteCardList = ({ data, handleTagClick }) => {
 
 const Feed = () => {
   const [posts, setPosts] = useState([]);
+
+  // Dialog states
+  const [openDialog, setOpenDialog] = useState(false);
+  const [noteOnDialog, setNoteOnDialog] = useState(null);
 
   // Search states
   const [searchText, setSearchText] = useState('');
@@ -58,11 +64,20 @@ const Feed = () => {
     );
   };
 
-  const handleTagClick = (tagName) => {
+  const handleTagClick = (tagName, event) => {
     setSearchText(tagName);
     const searchResult = filterNotes(tagName);
     setSearchedResults(searchResult);
   }
+
+  const handleClickOpen = (post) => {
+    setNoteOnDialog(post);
+    setOpenDialog(true);
+  };
+
+  const handleClose = () => {
+    setOpenDialog(false);
+  };
 
   return (
     <section className='feed'>
@@ -80,16 +95,19 @@ const Feed = () => {
         <NoteCardList
           data={searchedResults}
           handleTagClick={handleTagClick}
+          handleClickOpen={handleClickOpen}
         />
       ) : (
         <NoteCardList
           data={posts}
           handleTagClick={handleTagClick}
+          handleClickOpen={handleClickOpen}
         />
-      )
-        
-      }
-      
+      )}
+      <NoteCardDialog
+        open={openDialog}
+        handleClose={handleClose}
+      ></NoteCardDialog>
     </section>
   )
 }
